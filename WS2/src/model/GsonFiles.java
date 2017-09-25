@@ -13,34 +13,18 @@ public class GsonFiles implements IDataStorage {
 	private final String FILENAME = "Members.json";
 
 	@Override
-	public Member[] getMembers() {
-		
-		
-		try {
-			Gson gson = new Gson();
-			JsonReader jsonReader = new JsonReader(new FileReader(FILENAME));
-			Member[] members = gson.fromJson(jsonReader, Member[].class);
-			return members;
-		
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// TODO Auto-generated method stub
-		return null;
+	public Member[] getMembers() throws IOException{
+		Gson gson = new Gson();
+		JsonReader jsonReader = new JsonReader(new FileReader(FILENAME));
+		Member[] members = gson.fromJson(jsonReader, Member[].class);
+		return members;
 	}
 
 	@Override
-	public void storeMembers(Member[] members) {
-
-		try (Writer writer = new FileWriter(FILENAME)){
-			Gson gson = new GsonBuilder().create();
-			gson.toJson(members, writer);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	public void storeMembers(Member[] members) throws IOException{
+		Writer writer = new FileWriter(FILENAME);
+		Gson gson = new GsonBuilder().create();
+		gson.toJson(members, writer);
 
 	}
 
