@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 public interface IDataStorage {
 	
-	public Member[] getMembers() throws IOException;
+	public LinkedList<Member> getMembers() throws IOException;
 	
-	public void storeMembers(Member[] members) throws IOException;
+	public void storeMembers(LinkedList<Member> members) throws IOException;
 
 }

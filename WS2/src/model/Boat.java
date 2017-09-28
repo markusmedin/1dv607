@@ -19,6 +19,7 @@ public class Boat {
 		this.owner = owner;
 		this.type = boatType;
 		this.length = length;
+		this.id = boatType.ordinal() + length;
 	}
 	
 	public int getOwner(){
@@ -35,6 +36,13 @@ public class Boat {
 	
 	public int getBoatLength() {
 		return this.length;
+	}
+	
+	public void setBoatLength(int length){
+		this.length = length;
+	}
+	public void setBoatType(BoatType type){
+		this.type = type;
 	}
 
 

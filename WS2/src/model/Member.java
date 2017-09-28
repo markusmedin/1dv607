@@ -2,6 +2,7 @@ package model;
 
 import java.util.LinkedList;
 
+
 public class Member {
 	private String name;
 	private int personalNo;
@@ -11,6 +12,11 @@ public class Member {
 	public Member(String name, int personalNo) {
 		this.name = name;
 		this.personalNo = personalNo;
+		int id = 0;
+		for (char c: name.toCharArray()){
+			id += c;
+		}
+		this.memberId = id % personalNo;
 	}
 
 	public void changeName(String name) {
@@ -22,12 +28,6 @@ public class Member {
 	}
 
 	public void addBoat(Boat boat) {
-		/*	int i = 0;
-		while (i < this.boats.size()) {
-			if (boat.getBoatId() == this.boats.get(i).getBoatId()) {
-				return;
-			}
-		}*/
 		this.boats.add(boat);
 
 	}
