@@ -9,9 +9,9 @@ public class Main {
 
 		UIInterface ui = new EngConsole();
 
-		YachtClub club = new YachtClub();
+		YachtClub controler = new YachtClub();
 
-		club.startApplication(ui);
+		controler.startApplication(ui);
 
 	}
 

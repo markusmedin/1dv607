@@ -1,15 +1,1 @@
-[
-  {
-    "name": "markus",
-    "personalNo": 331213,
-    "memberId": 659,
-    "boats": [
-      {
-        "owner": 659,
-        "length": 1231,
-        "id": 1234,
-        "type": "Other"
-      }
-    ]
-  }
-]
+[]

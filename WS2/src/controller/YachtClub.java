@@ -8,90 +8,92 @@ import java.util.LinkedList;
 import model.Member;
 import model.Boat;
 import model.Boat.BoatType;
-import model.IDataStorage;
 import model.GsonFiles;
+import model.IDataStorage;
 import view.UIInterface;
 
 public class YachtClub {
 	private LinkedList<Member> members = new LinkedList<Member>();
 	private IDataStorage dataStorage = new GsonFiles();
-	private UIInterface ui;
 
-	public void startApplication(UIInterface in_ui) {
-		int menuItem = 0;
-		this.ui = in_ui;
-		this.ui.displayWelcomeMessage();
-		this.readData();
-		while (menuItem != -1) {
-			this.ui.displayMenu();
-			menuItem = this.ui.readUserInt();
+	public void startApplication(UIInterface a_ui) {
 
-			switch (menuItem) {
+		int selectedMenuItem = 0;
+
+		a_ui.displayWelcomeMessage();
+		this.readStoredData(a_ui);
+
+		// Main menu
+		while (selectedMenuItem != -1) {
+			a_ui.displayMenu();
+			selectedMenuItem = a_ui.readUserInt();
+
+			switch (selectedMenuItem) {
 			case 1:
-				this.createMember();
-				this.saveData();
+				this.createMember(a_ui);
+				this.saveData(a_ui);
 				break;
 			case 2:
 				if (this.anyMembers() == false) {
-					this.ui.noMembers();
+					a_ui.noMembers();
 					break;
 				}
-				this.listMembers();
-				this.saveData();
+				this.listMembers(a_ui);
+				this.saveData(a_ui);
 				break;
 			case 3:
 				if (this.anyMembers() == false) {
-					this.ui.noMembers();
+					a_ui.noMembers();
 					break;
 				}
-				this.deleteMember();
-				this.saveData();
+				this.deleteMember(a_ui);
+				this.saveData(a_ui);
 				break;
 			case 4:
 				if (this.anyMembers() == false) {
-					this.ui.noMembers();
+					a_ui.noMembers();
 					break;
 				}
-				this.updateMember();
-				this.saveData();
+				this.updateMember(a_ui);
+				this.saveData(a_ui);
 				break;
 			case 5:
 				if (this.anyMembers() == false) {
-					this.ui.noMembers();
+					a_ui.noMembers();
 					break;
 				}
-				this.viewMember();
-				this.saveData();
+				this.viewMember(a_ui);
+				this.saveData(a_ui);
 				break;
 			case 6:
 				if (this.anyMembers() == false) {
-					this.ui.noMembers();
+					a_ui.noMembers();
 					break;
 				}
-				this.registerBoat();
-				this.saveData();
+				this.registerBoat(a_ui);
+				this.saveData(a_ui);
 				break;
 			case 7:
 				if (this.anyMembers() == false) {
-					this.ui.noMembers();
+					a_ui.noMembers();
 					break;
 				}
-				this.deleteBoat();
-				this.saveData();
+				this.deleteBoat(a_ui);
+				this.saveData(a_ui);
 				break;
 			case 8:
 				if (this.anyMembers() == false) {
-					this.ui.noMembers();
+					a_ui.noMembers();
 					break;
 				}
-				this.updateBoat();
-				this.saveData();
+				this.updateBoat(a_ui);
+				this.saveData(a_ui);
 				break;
 			case -1:
-				this.quit();
+				this.quit(a_ui);
 				break;
 			default:
-				this.ui.notUnderstood();
+				a_ui.notUnderstood();
 				break;
 			}
 
@@ -99,254 +101,399 @@ public class YachtClub {
 
 	}
 
-	private void createMember() {
-		String name = "";
-		int personalNo = 0;
-		this.ui.createMember();
-		this.ui.selectName();
-		name = this.ui.readUserString();
-		this.ui.printMessage("Specify the personal no:");
-		personalNo = this.ui.readUserInt();
-		for (Member mem : this.members) {
-			if (mem.getName().equalsIgnoreCase(name) && mem.getPersonalNo() == personalNo) {
-				return;
-			}
+	private void createMember(UIInterface a_ui) {
+		String memberName = "";
+		int memberPersonalNo = 0;
+
+		// Display heading
+		a_ui.createMember();
+
+		// Request name
+		a_ui.selectName();
+		memberName = a_ui.readUserString();
+
+		// Request personal number
+		a_ui.selectPersonalNo();
+		memberPersonalNo = a_ui.readUserInt();
+
+		// Validate unique member
+		if (this.memberExsists(memberName, memberPersonalNo)) {
+			a_ui.duplicateInformation();
+			return;
 		}
-		this.members.add(new Member(name, personalNo));
+
+		// Add member
+		this.members.add(new Member(memberName, memberPersonalNo));
 
 	}
 
-	private void listMembers() {
+	private void listMembers(UIInterface a_ui) {
+		// Display heading
+		a_ui.listMembers();
 
-		this.ui.listMembers();
-		int memberDetails = this.ui.readUserInt();
-		if (memberDetails == 2) {
-			this.showDetailedUserList(this.members);
+		// Detailed or compact view
+		int detailedList = a_ui.readUserInt();
+		if (detailedList == 2) {
+
+			this.showDetailedMemberList(a_ui, this.members);
 		} else {
-			this.showCompactUserList(this.members);
+
+			this.showCompactMemberList(a_ui, this.members);
 		}
 
 	}
 
-	private void deleteMember() {
-		this.listMembers();
+	private void deleteMember(UIInterface a_ui) {
 
-		this.ui.deleteMember();
-		int memberToDelete = this.ui.readUserInt();
-		System.out.println(memberToDelete);
-		for (int i = 0; i < this.members.size(); i++) {
-			if (this.members.get(i).getMemberId() == memberToDelete) {
-				this.members.remove(i);
-				this.ui.operationOK();
-				return;
-			}
-		}
-		this.ui.operationFailed();
-	}
+		// Display heading
+		a_ui.deleteMember();
 
-	private void updateMember() {
-		this.ui.updateMember();
-		this.listMembers();
-		int memberToUpdate = this.ui.readUserInt();
-		for (int i = 0; i < this.members.size(); i++) {
-			if (memberToUpdate == this.members.get(i).getMemberId()) {
-				this.members.get(i).changeName(this.ui.readUserString());
-				this.members.get(i).changePersonalNo(this.ui.readUserInt());
-				this.ui.operationOK();
-				return;
-			}
-		}
-		this.ui.operationFailed();
+		// Select member
+		this.showCompactMemberList(a_ui, this.members);
+		a_ui.selectMemberId();
+		int memberId = a_ui.readUserInt();
 
-	}
+		if (this.validMemberId(memberId)) {
 
-	private void viewMember() {
-		this.ui.viewMember();
-			this.showCompactUserList(this.members);
-			this.ui.printMessage("Select a member to view the deatils on by entering the id");
-			int memberToLookAt = this.ui.readUserInt();
+			for (int i = 0; i < this.members.size(); i++) {
 
-			for (Member mem : this.members) {
-				if (mem.getMemberId() == memberToLookAt) {
-					this.ui.printMessage("ID: " + mem.getMemberId() + "\tName: " + mem.getName() + "\tPersonal No: "
-							+ mem.getPersonalNo());
-					if (mem.getBoats().size() < 1) {
-						this.ui.printMessage("\tNo boats registred to " + mem.getName());
-					} else {
-						this.ui.printMessage("\tBoats owned by " + mem.getName());
-						for (Boat boat : mem.getBoats()) {
-							this.ui.printMessage("\t\t Boat id:" + boat.getBoatId() + "\tType: " + boat.getType()
-									+ "\t Length: " + boat.getBoatLength());
-						}
-					}
+				if (this.members.get(i).getMemberId() == memberId) {
+
+					// Removal of member
+					this.members.remove(i);
+					a_ui.operationOK();
 					return;
 				}
-				this.ui.operationFailed();
 			}
+		} else {
+
+			// Member not found
+			a_ui.operationFailed();
+		}
+
 	}
 
-	private void registerBoat() {
-		this.ui.registerBoat();
-		this.showCompactUserList(this.members);
-		this.ui.printMessage("Select a member to register a boat to");
-		int memberToRegisterAt = this.ui.readUserInt();
-		for (Member mem : this.members) {
-			if (memberToRegisterAt == mem.getMemberId()) {
-				this.ui.printMessage("Enter a boat type: ");
-				this.listBoatTypes();
-				BoatType type = BoatType.values()[this.ui.readUserInt()-1];
-				this.ui.printMessage("Enter boat length length:");
-				int length = this.ui.readUserInt();
-				for (Boat a_boat : mem.getBoats()) {
-					if (a_boat.getBoatLength() == length && a_boat.getType() == type) {
-						this.ui.duplicateInformation();
-						return;
-					}
+	private void updateMember(UIInterface a_ui) {
+		// Display heading
+		a_ui.updateMember();
+
+		// Select member
+		this.showCompactMemberList(a_ui, this.members);
+		a_ui.selectMemberId();
+		int memberId = a_ui.readUserInt();
+		if (this.validMemberId(memberId)) {
+
+			for (int i = 0; i < this.members.size(); i++) {
+
+				if (this.members.get(i).getMemberId() == memberId) {
+
+					// Update member
+					a_ui.selectName();
+					this.members.get(i).changeName(a_ui.readUserString());
+					a_ui.selectPersonalNo();
+					this.members.get(i).changePersonalNo(a_ui.readUserInt());
+					a_ui.operationOK();
+					return;
 				}
-				mem.getBoats().add(new Boat(memberToRegisterAt, type, length));
-				this.ui.operationOK();
+			}
+		} else {
+			// Member not found
+			a_ui.operationFailed();
+		}
+
+	}
+
+	private void viewMember(UIInterface a_ui) {
+		// Display heading
+		a_ui.viewMember();
+
+		// Select member
+		this.showCompactMemberList(a_ui, this.members);
+		a_ui.selectMemberId();
+		int memberId = a_ui.readUserInt();
+
+		if (this.validMemberId(memberId)) {
+
+			for (Member a_member : this.members) {
+
+				if (a_member.getMemberId() == memberId) {
+					// Print member information
+					this.showDetailedMember(a_ui, a_member);
+					return;
+				}
+			}
+
+		} else {
+			// Member not found
+			a_ui.operationFailed();
+		}
+
+	}
+
+	private void registerBoat(UIInterface a_ui) {
+		// Display heading
+		a_ui.registerBoat();
+
+		// Select  member
+		this.showCompactMemberList(a_ui, this.members);
+		a_ui.selectMemberId();
+		int memberId = a_ui.readUserInt();
+
+		if (this.validMemberId(memberId)) {
+
+			// Select boat information
+			BoatType a_type = this.getBoatTypes(a_ui);
+			a_ui.selectBoatLength();
+			int boatLength = a_ui.readUserInt();
+			for (Member a_member : this.members) {
+
+				if (a_member.getMemberId() == memberId) {
+
+					for (Boat a_boat : a_member.getBoats()) {
+
+						if (a_boat.getBoatLength() == boatLength && a_boat.getType() == a_type) {
+							// Boat found and not unique
+							a_ui.duplicateInformation();
+							return;
+						} 
+
+					}
+					// Adding boat
+					a_member.getBoats().add(new Boat(memberId, a_type, boatLength));
+					a_ui.operationOK();
+				}
+
+			}
+
+		} else {
+
+			// Member not found
+			a_ui.operationFailed();
+		}
+
+	}
+
+	private void deleteBoat(UIInterface a_ui) {
+		// Display heading
+		a_ui.deleteBoat();
+
+		// Select member
+		this.showCompactMemberList(a_ui, this.members);
+		a_ui.selectMemberId();
+		int memberId = a_ui.readUserInt();
+
+		if (this.validMemberId(memberId)) {
+
+			for (Member a_member : this.members) {
+
+				if (a_member.getMemberId() == memberId) {
+
+					// Select boat
+					int boatId = this.getBoatId(a_ui, a_member);
+					for (int i = 0; i < a_member.getBoats().size(); i++) {
+
+						if (a_member.getBoats().get(i).getBoatId() == boatId) {
+
+							// Removal of boat
+							a_member.getBoats().remove(i);
+							a_ui.operationOK();
+							return;
+						}
+					}
+
+					// Boat not found
+					a_ui.operationFailed();
+				} else {
+
+					// Member not found
+					a_ui.operationFailed();
+				}
 
 			}
 		}
 
 	}
 
-	private void deleteBoat() {
-		this.ui.deleteBoat();
-		this.showCompactUserList(this.members);
-		this.ui.printMessage("Select a member to delete a boat from");
-		int selectedMember = this.ui.readUserInt();
-		for (Member mem : this.members) {
-			if (selectedMember == mem.getMemberId()) {
-				this.ui.selectBoat();
-				this.listBoats(mem.getBoats());
-				int boatToDelete = this.ui.readUserInt();
-				for (int i = 0; i < mem.getBoats().size(); i++) {
-					if (mem.getBoats().get(i).getBoatId() == boatToDelete) {
-						mem.getBoats().remove(i);
-						this.ui.operationOK();
-						return;
+	private void updateBoat(UIInterface a_ui) {
+
+		// Display heading
+		a_ui.updateBoat();
+
+		// Select member
+		this.showCompactMemberList(a_ui, this.members);
+		a_ui.selectMemberId();
+		int memberId = a_ui.readUserInt();
+
+		if (this.validMemberId(memberId)) {
+
+			for (Member a_member : this.members) {
+
+				if (a_member.getMemberId() == memberId) {
+
+					// Select boat
+					int boatId = this.getBoatId(a_ui, a_member);
+					for (int i = 0; i < a_member.getBoats().size(); i++) {
+						if (a_member.getBoats().get(i).getBoatId() == boatId) {
+
+							// Update boat
+							a_member.getBoats().get(i).setBoatType(this.getBoatTypes(a_ui));
+							a_ui.selectBoatLength();
+							int boatLength = a_ui.readUserInt();
+							a_member.getBoats().get(i).setBoatLength(boatLength);
+							a_ui.operationOK();
+							return;
+						}
 					}
+
+					// Boat not found
+					a_ui.operationFailed();
+				} else {
+
+					// Member not found
+					a_ui.operationFailed();
 				}
-				this.ui.operationFailed();
 
 			}
-
 		}
-		this.ui.operationFailed();
-
 	}
 
-	private void updateBoat() {
-		this.ui.updateBoat();
-		this.showCompactUserList(this.members);
-		this.ui.printMessage("Select a member to delete a boat for");
-		int selectedMember = this.ui.readUserInt();
-		for (Member mem : this.members) {
-			if (selectedMember == mem.getMemberId()) {
-				this.ui.selectBoat();
-				this.listBoats(mem.getBoats());
-				int boatToUpdate = this.ui.readUserInt();
-				for (int i = 0; i < mem.getBoats().size(); i++) {
-					if (mem.getBoats().get(i).getBoatId() == boatToUpdate) {
-						this.ui.printMessage("Which type should the boat have?");
-						this.listBoatTypes();
-						mem.getBoats().get(i)
-								.setBoatType(BoatType.values()[this.ui.readUserInt()]);
-						this.ui.printMessage("What's the new length of the boat?");
-						mem.getBoats().get(i).setBoatLength(this.ui.readUserInt());
-						this.ui.operationOK();
-						return;
-
-					}
-				}
-				this.ui.operationFailed();
-
-			}
-
-		}
-		this.ui.operationFailed();
+	private void quit(UIInterface a_ui) {
+		// Display quit information
+		a_ui.quit();
 	}
 
-	private void quit() {
-		this.ui.quit();
-	}
+	private void readStoredData(UIInterface a_ui) {
+		// Reading of persistent date
 
-	private void readData() {
 		try {
+
 			this.members = this.dataStorage.getMembers();
 		} catch (IOException e) {
+			// Printing of errors
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
-			this.ui.printError(errors.toString());
+			a_ui.printError(errors.toString());
 		}
 	}
 
-	private void saveData() {
+	private void saveData(UIInterface a_ui) {
+		// Saving data
 		try {
 			dataStorage.storeMembers(this.members);
 		} catch (IOException e) {
+			// Printing of errors
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
-			this.ui.printError(errors.toString());
-		}
-
-	}
-	private void showDetailedUserList(LinkedList<Member> members) {
-		for (Member mem : members) {
-			this.ui.printMessage(
-					"ID: " + mem.getMemberId() + "\tName: " + mem.getName() + "\tPersonal No: " + mem.getPersonalNo());
-			if (mem.getBoats().size() < 1) {
-				this.ui.printMessage("\tNo boats registred to " + mem.getName());
-			} else {
-				this.ui.printMessage("\tBoats owned by " + mem.getName());
-				for (Boat boat : mem.getBoats()) {
-					this.ui.printMessage("\t\t Boat id:" + boat.getBoatId() + "\tType: " + boat.getType()
-							+ "\t Length: " + boat.getBoatLength());
-				}
-
-			}
-
-		}
-	}
-
-	private void showCompactUserList(LinkedList<Member> members) {
-		for (Member mem : members) {
-			this.showDetailedMember(mem);
+			a_ui.printError(errors.toString());
 		}
 
 	}
 
-	private void showDetailedMember(Member mem) {
-		this.ui.printMessage("ID: " + mem.getMemberId() + "\tName: " + mem.getName() + "\tPersonal No: "
-				+ mem.getPersonalNo() + "\tBoats: " + mem.getBoats().size());
+	private void showDetailedMemberList(UIInterface a_ui, LinkedList<Member> a_members) {
+
+		for (Member a_member : a_members) {
+
+			this.showDetailedMember(a_ui, a_member);
+		}
+	}
+
+	private void showCompactMemberList(UIInterface a_ui, LinkedList<Member> a_members) {
+
+		for (Member a_member : a_members) {
+
+			this.showCompactMember(a_ui, a_member);
+		}
 
 	}
 
-	private void listBoats(LinkedList<Boat> boats) {
-		if (boats.size() < 1) {
-			this.ui.printMessage("\tNo boats registred to the member");
+	private void showCompactMember(UIInterface a_ui, Member a_member) {
+
+		// Printing compact member view
+		a_ui.printMessage("ID: " + a_member.getMemberId() + "\tName: " + a_member.getName() + "\tPersonal No: "
+				+ a_member.getPersonalNo() + "\tBoats: " + a_member.getBoats().size());
+
+	}
+
+	private void showDetailedMember(UIInterface a_ui, Member a_member) {
+
+		// Printing detailed member view
+		a_ui.printMessage("ID: " + a_member.getMemberId() + "\tName: " + a_member.getName() + "\tPersonal No: "
+				+ a_member.getPersonalNo());
+		this.listBoats(a_ui, a_member.getBoats());
+
+	}
+
+	private void listBoats(UIInterface a_ui, LinkedList<Boat> a_boats) {
+		// Printing boats
+
+		if (a_boats.size() < 1) {
+
+			a_ui.printMessage("\tNo boats registred to the member");
 		} else {
-			this.ui.printMessage("\tBoats owned by the member");
-			for (Boat boat : boats) {
-				this.ui.printMessage("\t\t Boat id:" + boat.getBoatId() + "\tType: " + boat.getType() + "\t Length: "
-						+ boat.getBoatLength());
+
+			a_ui.printMessage("\tBoats owned by the member");
+			for (Boat a_boat : a_boats) {
+
+				a_ui.printMessage("\t\t Boat id:" + a_boat.getBoatId() + "\tType: " + a_boat.getType() + "\t Length: "
+						+ a_boat.getBoatLength());
 			}
 
 		}
 
 	}
 
-	private void listBoatTypes() {
+	private BoatType getBoatTypes(UIInterface a_ui) {
+		// Selecting boattype
+		a_ui.selectBoatType();
 		int counter = 1;
-		for (BoatType type : BoatType.values()) {
-			this.ui.printMessage(counter + ". " + type.toString());
+		for (BoatType a_type : BoatType.values()) {
+			a_ui.printMessage(counter + ". " + a_type.toString());
 			counter++;
 		}
+
+		counter = a_ui.readUserInt() - 1;
+
+		// Preventing illegal values
+		if (counter > 3)
+			counter = 0;
+
+		return BoatType.values()[counter];
 
 	}
 
 	private boolean anyMembers() {
+
+		// Checks if there are any members registered
 		return this.members.size() != 0;
+	}
+
+	private boolean memberExsists(String memberName, int memberPersonalNo) {
+		// Checks is a member exists
+		for (Member a_member : this.members) {
+			if (a_member.getName().equalsIgnoreCase(memberName) && a_member.getPersonalNo() == memberPersonalNo) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
+	private boolean validMemberId(int memberIdNo) {
+		// Validating a memberId
+		for (Member a_member : this.members) {
+			if (a_member.getMemberId() == memberIdNo) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private int getBoatId(UIInterface a_ui, Member a_member) {
+
+		this.listBoats(a_ui, a_member.getBoats());
+		a_ui.selectBoat();
+		return a_ui.readUserInt();
 	}
 }
