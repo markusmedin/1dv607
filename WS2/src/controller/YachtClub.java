@@ -18,6 +18,7 @@ public class YachtClub {
 	private IDataStorage m_dataStorage;
 
 	public void startApplication(UIInterface a_ui) {
+		//Start function of the controller
 
 		this.m_members = new LinkedList<Member>();
 		this.m_dataStorage = new GsonFiles();
@@ -104,6 +105,8 @@ public class YachtClub {
 	}
 
 	private void createMember(UIInterface a_ui) {
+		//Function to create a new member 
+		
 		String memberName = "";
 		int memberPersonalNo = 0;
 
@@ -130,6 +133,8 @@ public class YachtClub {
 	}
 
 	private void listMembers(UIInterface a_ui) {
+		//Function to list all members
+		
 		// Display heading
 		a_ui.listMembers();
 
@@ -146,6 +151,7 @@ public class YachtClub {
 	}
 
 	private void deleteMember(UIInterface a_ui) {
+		//Function to delete a member
 
 		// Display heading
 		a_ui.deleteMember();
@@ -176,6 +182,8 @@ public class YachtClub {
 	}
 
 	private void updateMember(UIInterface a_ui) {
+		//Function to update a member
+		
 		// Display heading
 		a_ui.updateMember();
 
@@ -190,6 +198,7 @@ public class YachtClub {
 				if (this.m_members.get(i).getMemberId() == memberId) {
 
 					// Update member
+					a_ui.printMessage("Insert the new information for the member");
 					a_ui.selectName();
 					this.m_members.get(i).changeName(a_ui.readUserString());
 					a_ui.selectPersonalNo();
@@ -206,6 +215,8 @@ public class YachtClub {
 	}
 
 	private void viewMember(UIInterface a_ui) {
+		//Function to view a member
+		
 		// Display heading
 		a_ui.viewMember();
 
@@ -233,6 +244,9 @@ public class YachtClub {
 	}
 
 	private void registerBoat(UIInterface a_ui) {
+		//Function to register a boat to a member
+		
+		
 		// Display heading
 		a_ui.registerBoat();
 
@@ -289,6 +303,13 @@ public class YachtClub {
 			for (Member member : this.m_members) {
 
 				if (member.getMemberId() == memberId) {
+					
+					//No boats stored on member
+					if (member.getBoats().size() == 0){
+						
+						a_ui.noBoats();
+						return;
+					}
 
 					// Select boat
 					int boatId = this.getBoatId(a_ui, member);
@@ -332,6 +353,11 @@ public class YachtClub {
 
 				if (member.getMemberId() == memberId) {
 
+					if (member.getBoats().size() == 0){
+						//No boats registered to member
+						a_ui.noBoats();
+						return;
+					}
 					// Select boat
 					int boatId = this.getBoatId(a_ui, member);
 					for (int i = 0; i < member.getBoats().size(); i++) {
@@ -392,6 +418,7 @@ public class YachtClub {
 	}
 
 	private void showDetailedMemberList(UIInterface a_ui, LinkedList<Member> a_members) {
+		//Presents a detailed member list
 
 		for (Member member : a_members) {
 
@@ -400,6 +427,7 @@ public class YachtClub {
 	}
 
 	private void showCompactMemberList(UIInterface a_ui, LinkedList<Member> a_members) {
+		//Presents a compact member list
 
 		for (Member member : a_members) {
 
@@ -429,8 +457,8 @@ public class YachtClub {
 		// Printing boats
 
 		if (a_boats.size() < 1) {
-
-			a_ui.printMessage("\tNo boats registred to the member");
+			a_ui.noBoats();
+			return;
 		} else {
 
 			a_ui.printMessage("\tBoats owned by the member");
@@ -445,6 +473,8 @@ public class YachtClub {
 	}
 
 	private BoatType getBoatTypes(UIInterface a_ui) {
+		//Generates a list of boattypes.
+		
 		// Selecting boattype
 		a_ui.selectBoatType();
 		int counter = 1;
@@ -493,6 +523,7 @@ public class YachtClub {
 	}
 
 	private int getBoatId(UIInterface a_ui, Member a_member) {
+		//Reading a boatId
 
 		this.listBoats(a_ui, a_member.getBoats());
 		a_ui.selectBoat();

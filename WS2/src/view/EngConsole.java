@@ -138,5 +138,9 @@ public class EngConsole implements UIInterface {
 	public void selectBoatLength() {
 		System.out.println("Enter the length of the boat:\n");
 	};
+	
+	public void noBoats(){
+		System.out.println("No boats registered to this member");
+	}
 
 }

@@ -53,4 +53,6 @@ public interface UIInterface {
 	public void selectBoatType();
 
 	public void selectBoatLength();
+	
+	public void noBoats();
 }
