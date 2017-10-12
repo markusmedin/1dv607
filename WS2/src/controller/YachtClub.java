@@ -105,8 +105,8 @@ public class YachtClub {
 	}
 
 	private void createMember(UIInterface a_ui) {
-		//Function to create a new member 
-		
+		//Function to create a new member
+
 		String memberName = "";
 		int memberPersonalNo = 0;
 
@@ -134,7 +134,7 @@ public class YachtClub {
 
 	private void listMembers(UIInterface a_ui) {
 		//Function to list all members
-		
+
 		// Display heading
 		a_ui.listMembers();
 
@@ -183,7 +183,7 @@ public class YachtClub {
 
 	private void updateMember(UIInterface a_ui) {
 		//Function to update a member
-		
+
 		// Display heading
 		a_ui.updateMember();
 
@@ -216,7 +216,7 @@ public class YachtClub {
 
 	private void viewMember(UIInterface a_ui) {
 		//Function to view a member
-		
+
 		// Display heading
 		a_ui.viewMember();
 
@@ -245,8 +245,8 @@ public class YachtClub {
 
 	private void registerBoat(UIInterface a_ui) {
 		//Function to register a boat to a member
-		
-		
+
+
 		// Display heading
 		a_ui.registerBoat();
 
@@ -303,10 +303,10 @@ public class YachtClub {
 			for (Member member : this.m_members) {
 
 				if (member.getMemberId() == memberId) {
-					
+
 					//No boats stored on member
 					if (member.getBoats().size() == 0){
-						
+
 						a_ui.noBoats();
 						return;
 					}
@@ -439,8 +439,7 @@ public class YachtClub {
 	private void showCompactMember(UIInterface a_ui, Member a_member) {
 
 		// Printing compact member view
-		a_ui.printMessage("ID: " + a_member.getMemberId() + "\tName: " + a_member.getName() + "\tPersonal No: "
-				+ a_member.getPersonalNo() + "\tBoats: " + a_member.getBoats().size());
+		a_ui.printMessage("ID: " + a_member.getMemberId() + "\tName: " + a_member.getName() + "\tBoats: " + a_member.getBoats().size());
 
 	}
 
@@ -474,7 +473,7 @@ public class YachtClub {
 
 	private BoatType getBoatTypes(UIInterface a_ui) {
 		//Generates a list of boattypes.
-		
+
 		// Selecting boattype
 		a_ui.selectBoatType();
 		int counter = 1;
