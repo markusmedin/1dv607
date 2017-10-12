@@ -11,8 +11,7 @@ title Create Member
 "controller:YachtClub"->"a_ui:UI": memberName = readUserString()
 "controller:YachtClub"->"a_ui:UI": selectPersonalNo()
 "controller:YachtClub"->"a_ui:UI": memberPersonalNo = readUserInt()
-"controller:YachtClub"->"controller:YachtClub": memberExsists()
+"controller:YachtClub"->"controller:YachtClub": memberExists()
 deactivate "controller:YachtClub"
 "controller:YachtClub"->+"controller:YachtClub": saveData()
 "controller:YachtClub"->"dataStorage:DataStorage": storeMembers()
-

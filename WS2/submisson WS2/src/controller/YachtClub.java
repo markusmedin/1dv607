@@ -411,8 +411,7 @@ public class YachtClub {
 	private void showCompactMember(UIInterface a_ui, Member a_member) {
 
 		// Printing compact member view
-		a_ui.printMessage("ID: " + a_member.getMemberId() + "\tName: " + a_member.getName() + "\tPersonal No: "
-				+ a_member.getPersonalNo() + "\tBoats: " + a_member.getBoats().size());
+		a_ui.printMessage("ID: " + a_member.getMemberId() + "\tName: " + a_member.getName() + "\tBoats: " + a_member.getBoats().size());
 
 	}
 

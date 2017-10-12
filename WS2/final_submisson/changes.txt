@@ -1,0 +1,7 @@
+Changes made in the application
+
+* Added additional comments after peer review
+* Added a extra method in the UI to handle operations where no boat was added to the member,
+also required some code in the controller to post the information
+* Corrected spelling mistakes in the sequence diagram and the instruction
+* Updated the function to show a compact list, the personal no is now removed from the printing.
