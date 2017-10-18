@@ -15,22 +15,30 @@ public class PlayGame {
     {
         a_view.DisplayGameOver(a_game.IsDealerWinner());
     }
-
-    int input = a_view.GetInput();
     
-    if (input == 'p')
+    InputMenu input = a_view.GetInput();
+    if (input == InputMenu.p)
     {
         a_game.NewGame();
     }
-    else if (input == 'h')
+    else if (input == InputMenu.h)
     {
         a_game.Hit();
     }
-    else if (input == 's')
+    else if (input == InputMenu.s)
     {
         a_game.Stand();
     }
 
-    return input != 'q';
+    return input != InputMenu.q;
+  }
+  
+  public enum InputMenu{
+		p,
+		h,
+		s,
+		q,
+		NotValid
   }
 }
+
