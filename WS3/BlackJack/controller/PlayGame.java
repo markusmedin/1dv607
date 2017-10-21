@@ -2,36 +2,50 @@ package BlackJack.controller;
 
 import BlackJack.view.IView;
 import BlackJack.model.Game;
+import BlackJack.model.Observer;
 
-public class PlayGame {
+public class PlayGame extends Observer{
+	
+	private Game m_game;
+	private IView m_view;
+	
+	public PlayGame(Game a_game, IView a_view){
+		m_view = a_view;
+		m_game = a_game;
+		m_game.addObserver(this);
+	}
 
-  public boolean Play(Game a_game, IView a_view) {
-    a_view.DisplayWelcomeMessage();
+  public boolean Play() {
+    m_view.DisplayWelcomeMessage();
     
-    a_view.DisplayDealerHand(a_game.GetDealerHand(), a_game.GetDealerScore());
-    a_view.DisplayPlayerHand(a_game.GetPlayerHand(), a_game.GetPlayerScore());
+    m_view.DisplayDealerHand(m_game.GetDealerHand(), m_game.GetDealerScore());
+    m_view.DisplayPlayerHand(m_game.GetPlayerHand(), m_game.GetPlayerScore());
 
-    if (a_game.IsGameOver())
+    if (m_game.IsGameOver())
     {
-        a_view.DisplayGameOver(a_game.IsDealerWinner());
+    	m_view.DisplayGameOver(m_game.IsDealerWinner());
     }
     
-    InputMenu input = a_view.GetInput();
+    InputMenu input = m_view.GetInput();
     if (input == InputMenu.p)
     {
-        a_game.NewGame();
+    	m_game.NewGame();
     }
     else if (input == InputMenu.h)
     {
-        a_game.Hit();
+    	m_game.Hit();
     }
     else if (input == InputMenu.s)
     {
-        a_game.Stand();
+    	m_game.Stand();
     }
 
     return input != InputMenu.q;
   }
+  public void update(){
+      m_view.DisplayDealerHand(m_game.GetDealerHand(), m_game.GetDealerScore());
+      m_view.DisplayPlayerHand(m_game.GetPlayerHand(), m_game.GetPlayerScore());
+  };
   
   public enum InputMenu{
 		p,

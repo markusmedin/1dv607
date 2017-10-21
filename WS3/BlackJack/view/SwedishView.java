@@ -49,6 +49,11 @@ public class SwedishView implements IView {
 					"ess" };
 			System.out.println("" + colors[a_card.GetColor().ordinal()] + " " + values[a_card.GetValue().ordinal()]);
 		}
+		try {
+			Thread.sleep(2);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void DisplayPlayerHand(Iterable<BlackJack.model.Card> a_hand, int a_score) {
