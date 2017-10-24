@@ -50,10 +50,11 @@ public class SwedishView implements IView {
 			System.out.println("" + colors[a_card.GetColor().ordinal()] + " " + values[a_card.GetValue().ordinal()]);
 		}
 		try {
-			Thread.sleep(2);
+			Thread.sleep(1500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public void DisplayPlayerHand(Iterable<BlackJack.model.Card> a_hand, int a_score) {
@@ -81,4 +82,5 @@ public class SwedishView implements IView {
 		System.out.println("Poäng: " + a_score);
 		System.out.println("");
 	}
+
 }

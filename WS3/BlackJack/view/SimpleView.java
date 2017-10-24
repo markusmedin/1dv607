@@ -40,7 +40,7 @@ public class SimpleView implements IView {
 	public void DisplayCard(BlackJack.model.Card a_card) {
 		System.out.println("" + a_card.GetValue() + " of " + a_card.GetColor());
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -72,4 +72,5 @@ public class SimpleView implements IView {
 		}
 
 	}
+	
 }
