@@ -2,9 +2,9 @@ package BlackJack.controller;
 
 import BlackJack.view.IView;
 import BlackJack.model.Game;
-import BlackJack.model.Observer;
+import BlackJack.model.AObserver;
 
-public class PlayGame extends Observer{
+public class PlayGame extends AObserver{
 	
 	private Game m_game;
 	private IView m_view;

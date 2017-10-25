@@ -1,6 +1,6 @@
 package BlackJack.model;
 
-public abstract class Observer {
+public abstract class AObserver {
 	
 	public abstract void update();
 

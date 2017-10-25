@@ -7,13 +7,13 @@ public class Player{
 
   private List<Card> m_hand;
   protected final int g_maxScore = 21;
-  private List<Observer> m_observers;
+  private List<AObserver> m_observers;
 
   public Player()
   {
   
     m_hand = new LinkedList<Card>();
-    m_observers = new LinkedList<Observer>();
+    m_observers = new LinkedList<AObserver>();
  //   System.out.println("Hello List World");
   }
   
@@ -78,18 +78,18 @@ public class Player{
 	  
   }
   
-  public void addObserver(Observer a_obs){
+  public void addObserver(AObserver a_obs){
 	  m_observers.add(a_obs);
 	  
   };
   
-  public void removeObserver(Observer a_obs){
+  public void removeObserver(AObserver a_obs){
 	  m_observers.remove(a_obs);
 	  
   };
   public void notifyObservers(){
 	  
-	  for (Observer obs: m_observers){
+	  for (AObserver obs: m_observers){
 		  obs.update();
 	  }
 	  

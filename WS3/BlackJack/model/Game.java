@@ -57,7 +57,7 @@ public class Game {
     return m_player.CalcScore();
   }
   
-  public void addObserver(Observer a_observer){
+  public void addObserver(AObserver a_observer){
 	  m_dealer.addObserver(a_observer);
 	  m_player.addObserver(a_observer);
   };
