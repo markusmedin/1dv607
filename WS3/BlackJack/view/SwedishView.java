@@ -41,6 +41,14 @@ public class SwedishView implements IView {
 	}
 
 	public void DisplayCard(BlackJack.model.Card a_card) {
+		if (a_card.isCardShown() == false){
+			try {
+				Thread.sleep(1500);
+				a_card.markCardAsShown();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		if (a_card.GetColor() == BlackJack.model.Card.Color.Hidden) {
 			System.out.println("Dolt Kort");
 		} else {
@@ -48,11 +56,6 @@ public class SwedishView implements IView {
 			String values[] = { "två", "tre", "fyra", "fem", "sex", "sju", "åtta", "nio", "tio", "knekt", "dam", "kung",
 					"ess" };
 			System.out.println("" + colors[a_card.GetColor().ordinal()] + " " + values[a_card.GetValue().ordinal()]);
-		}
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 
 	}

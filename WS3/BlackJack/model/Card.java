@@ -32,11 +32,13 @@ public class Card {
   private Color m_color;
   private Value m_value;
   private boolean m_isHidden;
+  private boolean m_isShown;
   
   public Card(Color a_color, Value a_value) {
     m_value = a_value;
     m_color = a_color;
     m_isHidden = true;
+    m_isShown= false;
   }
   
   public Color GetColor() {
@@ -57,5 +59,11 @@ public class Card {
 
   public void Show(boolean a_show) {
       m_isHidden = !a_show;
+  }
+  public void markCardAsShown(){
+	  m_isShown = true;
+  }
+  public boolean isCardShown(){
+	  return m_isShown;
   }
 }

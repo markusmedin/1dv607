@@ -24,6 +24,7 @@ public class Player{
   
   public Iterable<Card> GetHand()
   {
+	
     return m_hand;
   }
   
